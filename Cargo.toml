@@ -4,11 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-#derust = { version = "0.2.1",  features = ["env", "http_client", "prometheus"] }
-derust = { path = "../derust/crates/derust",  features = ["env", "http_client", "prometheus"] }
+derust = { version = "0.2.1",  features = ["env", "http_client", "prometheus"] }
 
 tokio = { version = "1.43.0", features = ["full"] }
 axum = { version = "0.8.1", default-features = true, features = ["macros", "tokio"] }
 serde = { version = "1.0.218", features = ["derive"]}
 serde_json = { version = "1.0.139" }
 regex = { version = "1.11.1" }
+configcat = { version = "0.1.2" }
+tracing = { version = "0.1.41", features = ["attributes", "tracing-attributes"] }
+uuid = { version = "1.11.0", features = ["v7", "fast-rng", "serde"] }

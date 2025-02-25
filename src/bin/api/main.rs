@@ -1,3 +1,5 @@
+use std::sync::Arc;
+use configcat::{Client, PollingMode};
 use derust::envx::{load_app_config, Environment};
 use derust::httpx::{start, AppContext};
 use derust::metricx::PrometheusConfig;
@@ -13,11 +15,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let env = Environment::detect().ok().unwrap_or(Environment::Local);
 
-    let app_state = AppState {};
+    let app_config: AppConfig = load_app_config(env, Some("APP")).await?;
+
+    let configcat = if let Some(configcat_sdk_key) = app_config.configcat_sdk_key {
+        Client::builder(&configcat_sdk_key).build().ok()
+    } else {
+        None
+    };
+
+    let app_state = AppState {
+        configcat: Arc::new(configcat),
+    };
 
     let application_name = "http-proxy-mock";
-
-    let app_config: AppConfig = load_app_config(env, Some("APP")).await?;
 
     let prometheus_config = PrometheusConfig {
         denied_metric_tags: vec![],
