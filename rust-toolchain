@@ -1,0 +1,7 @@
+[toolchain]
+channel = "1.85"
+components = ["rustfmt", "clippy"]
+
+[toolchain.package]
+cargo-nextest = { version = "0.9.92" }
+cargo-watch = { version = "8.5.3" }
