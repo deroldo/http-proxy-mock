@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-derust = { version = "0.2.1",  features = ["env", "http_client", "prometheus"] }
+derust = { version = "0.2.3",  features = ["env", "http_client", "prometheus"] }
 
 tokio = { version = "1.43.0", features = ["full"] }
 axum = { version = "0.8.1", default-features = true, features = ["macros", "tokio"] }
@@ -13,4 +13,12 @@ serde_json = { version = "1.0.139" }
 regex = { version = "1.11.1" }
 configcat = { version = "0.1.2" }
 tracing = { version = "0.1.41", features = ["attributes", "tracing-attributes"] }
-uuid = { version = "1.11.0", features = ["v7", "fast-rng", "serde"] }
+uuid = { version = "1.14.0", features = ["v7", "fast-rng", "serde"] }
+
+[dev-dependencies]
+tower = { version = "0.5.2", features = ["util"] }
+rstest = { version = "0.24.0" }
+test-context = { version = "0.4.1" }
+wiremock = { version = "0.6.2" }
+jsonpath-rust = { version = "0.7.5" }
+rand = { version = "0.8.5" }

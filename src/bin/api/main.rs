@@ -1,13 +1,13 @@
-use std::sync::Arc;
-use configcat::{Client, PollingMode};
-use derust::envx::{load_app_config, Environment};
-use derust::httpx::{start, AppContext};
+use configcat::Client;
+use derust::envx::{Environment, load_app_config};
+use derust::httpx::{AppContext, start};
 use derust::metricx::PrometheusConfig;
 use derust::tracex;
 use http_proxy_mock::config::AppConfig;
 use http_proxy_mock::routes::Routes;
 use http_proxy_mock::state::AppState;
 use regex::Regex;
+use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -23,9 +23,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         None
     };
 
-    let app_state = AppState {
-        configcat: Arc::new(configcat),
-    };
+    let app_state = AppState { configcat: Arc::new(configcat) };
 
     let application_name = "http-proxy-mock";
 
@@ -34,13 +32,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         denied_metric_tags_by_regex: vec![Regex::new(".+_id$").unwrap()],
     };
 
-    let context = AppContext::new(
-        application_name,
-        env,
-        prometheus_config,
-        app_state,
-    )?;
+    let context = AppContext::new(application_name, env, prometheus_config, app_state)?;
     let router = Routes::routes().await;
 
-    start(app_config.port, context, router).await
+    start(app_config.port.unwrap_or(9095), context, router).await
 }

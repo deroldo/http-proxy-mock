@@ -107,16 +107,12 @@ async fn patch_handler_with_path(
     ProxyService::proxy_or_mock(&context, Method::PATCH, &headers, path, parse_body_to_json(&body)?).await
 }
 
-fn parse_body_to_json(body: &String) -> Result<Option<Value>, HttpError> {
+fn parse_body_to_json(body: &str) -> Result<Option<Value>, HttpError> {
     if body.is_empty() {
         return Ok(None);
     }
 
-    serde_json::from_str(body).map(Some).map_err(|error| {
-        HttpError::without_body(
-            StatusCode::BAD_REQUEST,
-            format!("Invalid JSON: {error}"),
-            HttpTags::default(),
-        )
-    })
+    serde_json::from_str(body)
+        .map(Some)
+        .map_err(|error| HttpError::without_body(StatusCode::BAD_REQUEST, format!("Invalid JSON: {error}"), HttpTags::default()))
 }
